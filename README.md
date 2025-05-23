@@ -773,3 +773,29 @@ forEach로 fruit배열을 순회하여 li를 생성한다 : forEach의 콜백함
 addEventListener로 클릭시 원하는 메시지를 출력하도록한다. : 이때의 콜백함수는 fruit라는 외부 변수를 참조하므로 클로저가 존재한다.
 
 이 클로저로 인해 선택한 것이 어떤 과일인지 계속 출력할수있다. 
+
+
+## 5-7
+
+그런데 5-6의 경우 addEventListener의 콜백 함수가 너무 자주 반복된다는 문자가 있다 따라서 반복되는 콜백 함수를 따로 빼서 변수에 담는다.
+
+```
+var fruits = ['apple', 'banana', 'peach'];
+var $ul = document.createElement('ul');
+
+var alertFruit = function(fruit) {
+  alert('your choice is ' + fruit);
+};
+fruits.forEach(function(fruit) {
+  var $li = document.createElement('li');
+  $li.innerText = fruit;
+  $li.addEventListener('click', alertFruit);
+  $ul.appendChild($li);
+});
+document.body.appendChild($ul);
+alertFruit(fruits[1]);
+```
+
+alertFruit(fruits[1]); 수행시 정상적으로 banana가 나오지만 li클릭시 5-6처럼 무엇을 눌렀다고 메시지가 정상적으로 나오지 않는다.
+
+addEventListener는 콜백함수를 호출할때 첫번째 인자에 이벤트 객체를 넣기 때문이다. 
