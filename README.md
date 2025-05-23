@@ -302,3 +302,51 @@ setTimeout(obj1.func.bind(obj2), 1500);
 ```
 
 미리 func의 this를 obj2로 해놓고 실행시 obj2.name을 출력한다.
+
+
+
+## 4-12 
+
+콜백지옥이란 콜백함수안에 콜백함수가 반복되어 깊이가 매우 깊어져 가독성이 크게 떨어지는 문제를 말한다. 
+
+```
+setTimeout(
+    function(name) {
+      var coffeeList = name;
+      console.log(coffeeList);
+  
+      setTimeout(
+        function(name) {
+          coffeeList += ', ' + name;
+          console.log(coffeeList);
+  
+          setTimeout(
+            function(name) {
+              coffeeList += ', ' + name;
+              console.log(coffeeList);
+  
+              setTimeout(
+                function(name) {
+                  coffeeList += ', ' + name;
+                  console.log(coffeeList);
+                },
+                500,
+                '카페라떼'
+              );
+            },
+            500,
+            '카페모카'
+          );
+        },
+        500,
+        '아메리카노'
+      );
+    },
+    500,
+    '에스프레소'
+);
+```
+
+위의 코드같은 경우에는 setTimeout안에 계속 setTimeout이 있어 가독성이 떨어진다 첫번째 실행되는 setTimeout이 에스프레소임에도 코드 가장 밑에있어
+
+동작을 알아보기 힘들다.
