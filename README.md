@@ -214,3 +214,66 @@ setTimeout(obj1.func, 1000);
 ```
 
 하지만 이렇게하면 this를 이용한 기술들을 자유롭게 활용하지 못한다. 
+
+내가 obj1으로 name을 결정해 버렸기 때문에 상황에 따라 바꾸지 못한다.
+
+
+## 4-10
+
+
+
+```
+var obj1 = {
+    name: 'obj1',
+    func: function() {
+      var self = this;
+      return function() {
+        console.log(self.name);
+      };
+    },
+};
+
+var obj2 = {
+    name: 'obj2',
+    func: obj1.func,
+};
+var callback2 = obj2.func();
+setTimeout(callback2, 1500);
+```
+
+obj2.func()실행할 것인데 func는  obj1.func가 가리키는 함수를 의 주소를 가진다. 따라서 obj2.func()를 하면 obj1에 있는 
+```
+func: function() {
+      var self = this;
+      return function() {
+        console.log(self.name);
+      };
+    },
+```
+를 실행할 것인데 이때 의 this는 obj2일 것이고 이것을 self에 저장해 놓았다가 
+
+```
+function() {
+        console.log(self.name);
+      };
+```
+return 후에 setTimeout으로 실행하여 obj2출력
+
+```
+var obj3 = { name: 'obj3' };
+var callback3 = obj1.func.call(obj3);
+setTimeout(callback3, 2000);
+```
+obj1.func.call(obj3); 이면 obj1.func의 this를 obj3로 바꾸고 실행한다.
+
+이때 this는 obj3이므로 self에 obj3저장후 함수
+
+```
+function() {
+        console.log(self.name);
+      };
+```
+return 후에 setTimeout으로 실행하여 obj3출력
+
+
+이렇게 간접적으로 원하는 함수를 바라보는 callback함수를 만들수있다. 
