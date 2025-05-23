@@ -851,9 +851,41 @@ fruits.forEach(function(fruit) {
 document.body.appendChild($ul);
 ```
 
-$li.addEventListener('click', alertFruitBuilder(fruit));에서 alertFruitBuilder(fruit)의 결과로 이전의 5-8의 alertFruit
+`$li.addEventListener('click', alertFruitBuilder(fruit))`에서 alertFruitBuilder(fruit)의 결과로 이전의 5-8의 alertFruit
 
 함수가 리턴되어 콜백함수로 전달된다. 이벤트 발생시 alertFruitBuilder 의 인자인 fruit를 클로저로써 참조하게되어 정상적으로 메시지가 출력됨과 동시에
 
 this가 유지되게된다.
 
+## 5-10
+
+자바스크립트는 변수에 접근권한을 직접 부여할수 없지만 클로저를 이용하여 접근권한을 제어할수 있다. 예를들어 5-3처럼 inner함수를 반환하여 outer의 변수를
+
+외부에서 접근 가능하게 하였다.
+
+이제부터 아래의 게임 코드를 이용하여 접근권한을 제어해보는 예제들을 진행하겠다. 
+
+var car = {
+  fuel: Math.ceil(Math.random() * 10 + 10),
+  power: Math.ceil(Math.random() * 3 + 2), 
+  moved: 0, 
+  run: function() {
+    var km = Math.ceil(Math.random() * 6);
+    var wasteFuel = km / this.power;
+    if (this.fuel < wasteFuel) {
+      console.log('이동불가');
+      return;
+    }
+    this.fuel -= wasteFuel;
+    this.moved += km;
+    console.log(km + 'km 이동 (총 ' + this.moved + 'km)');
+  },
+};
+
+위의 코드를 설명하면
+
+랜덤으로 fuel, power를 할당한다. run 메서드 실행시 랜덤한 거리를 이동하고 지정된 power와 이동거리에 따라 소모 연료를 계산하고 
+
+남은 연료가 없으면 이동불가를 출력, 이후 남은 연료와 이동거리를 업데이트한다. 
+
+위 코드로 car 객체를 만든후 c.fuel=1000처럼 외부에서 마음대로 바꿀수 있다. 이것을 막기위해 클로저를 활용하여 권한을 제한할수있다. 
