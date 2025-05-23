@@ -116,3 +116,36 @@ call 메서드를 이용하여 thisArg가 있으면 그것을 callback의 this�
 map완료시 그 mappedArr 배열을 넘긴다. 
 
 이런식으로 map이 동작하고 this를 내가 원하는 것으로 바꿀수 있는것이다.
+
+
+## 4-6
+
+콜백함수에서의 this가 어떻게 지정되는지 여러 예제를 든것이다. 
+
+```
+setTimeout(function() {
+    console.log(this);
+ }, 300);
+```
+
+setTimeout의 경우 내부에서 call메서드를 사용하여 callback의 this를 window를 가리키게 한다.
+
+```
+[1, 2, 3, 4, 5].forEach(function(x) {
+    console.log(this); 
+});
+```
+
+forEach는 별도로 this를 지정할 인자를 넘겨주지 않았기 때문에 자동으로 window로 지정되어 window가 5번 출력된다.
+
+```
+document.body.innerHTML += '<button id="a">클릭</button>';
+document.body.querySelector('#a').addEventListener(
+    'click',
+    function(e) {
+      console.log(this, e);
+    }
+);
+```
+
+addEventListener는 메서드의 this를 callback의 함수의 this로 지정하기 때문에 addEventListener를 호출한 HTML 엘리먼트를 가리킨다.
