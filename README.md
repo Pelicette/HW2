@@ -678,4 +678,70 @@ outer의 a=1을 가져와 1을 더한다. 출력은 2이고 outer의 a는 2를 �
 위 코드는 addEventListener에 callback함수 내부에서 지역변수 참조로 클로저라고 할수있다. 
 
 
+## 5-5-1
 
+5-5는클로저에 의해 의도적으로 지역변수가 가비지 컬랙터에 의해 수집되지 않고 메모리를 소모하게 하는데 이를 원하는 때에 메모리를 소모하지 않게 하는 방법에 대한 
+
+예제이다. 그 방법은 null이나 undefined를 할당하면 된다. 
+
+```
+var outer = (function() {
+  var a = 1;
+  var inner = function() {
+    return ++a;
+  };
+  return inner;
+})();
+console.log(outer());
+console.log(outer());
+outer = null; 
+```
+
+위 코드는 5-3의 코드에 outer = null; 을 추가한 것인데 클로저를 모두 활용한 이후 참조형 data outer에 null을 넣어 메모리 소모를 멈춘것이다.
+
+가리키는 것이 없으므로 가비지 컬랙터에 의해 수집될 것이다.
+
+
+
+## 5-5-2
+
+내부 함수 inner에 참조형이 아닌 null을 할당하여 함수를 그만 가리키게 한다. 더이상 가리키는 것이 없으므로 가비지 컬랙터에 의해 수집될 것이므로 
+
+메모리 소모가 멈춘다.
+
+```
+(function() {
+  var a = 0;
+  var intervalId = null;
+  var inner = function() {
+    if (++a >= 10) {
+      clearInterval(intervalId);
+      inner = null; 
+    }
+    console.log(a);
+  };
+  intervalId = setInterval(inner, 1000);
+})();
+```
+
+## 5-5-3
+
+내부함수 clickHandler가 외부로 전달되는데 count가 10이상일시 clickHandler = null;로 가리키는것을 끊어주어 메모리 소모를 멈춘다.
+
+```
+(function() {
+  var count = 0;
+  var button = document.createElement('button');
+  button.innerText = 'click';
+
+  var clickHandler = function() {
+    console.log(++count, 'times clicked');
+    if (count >= 10) {
+      button.removeEventListener('click', clickHandler);
+      clickHandler = null;
+    }
+  };
+  button.addEventListener('click', clickHandler);
+  document.body.appendChild(button);
+})();
+```
