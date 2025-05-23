@@ -572,7 +572,7 @@ outer();
 
 inner 실행시 inner의 외부 환경은 outer를 가리키고 내부 환경은 없다 이때 ++a를 해야하는데 내부 환경에는 없으므로 스코프 체인을 따라 outer의 a를
 
-찾아서 1을 더해준후 출력한다. 이후 콜스택에서 inner가 pop, outer가 pop되어 a, inner에 대한 참조가 지워지면 가비지 컬렉터가 a, inner를 수집한다. 
+찾아서 1을 더해준후 출력한다. 이후 콜스택에서 inner의 LE가제거, outer의 LE가 제거-> a, inner에 대한 참조가 지워지면 가비지 컬렉터가 a, inner를 수집한다. 
 
 
 
@@ -594,5 +594,44 @@ console.log(outer2);
 ```
 var outer2 = outer()수행시 5-1처럼 inner의 내부환경에 a가 없기 때문에 스코프 체인을 따라 outer의 a=1을 찾아 1을 더해준 2를 반환한다.
 
-이후 inner가 pop한 이후 outer가 pop한다. 5-1과 5-2모두 outer보다 inner가 콜스택에서 pop되어서 이후 별도로 inner를 호출할수 없다. 
+이후 inner의 LE가 제거된 이후 outer의 LE가 제거된다. 5-1과 5-2모두 outer보다 inner가 콜스택에서 제거되어서 이후 별도로 inner를 호출할수 없다. 
+
+
+
+## 5-3
+
+가비지 컬렉터는 어던 값을 참조하는 변수가 하나라도 있다면 그 값은 수집대상에 포함하지 않는다라는 것을 이용하여
+
+outer가 pop된 이후에도 inner함수를 호출시키도록 하는 예제이다. 
+
+또한 클로져가 무었이고 어떻게 발생하는지 설명한다. 
+
+클로저의 정의 : 5-3 예제처럼 어던 함수 A에서 선언한 변수 a를 참조하는 내부함수 B를 외부로 전달할 경우 A의 실행 컨텍스트가 종료된 이후에도 변수 a가 
+
+사라지지 않는 현상이다.
+
+```
+var outer = function() {
+  var a = 1;
+  var inner = function() {
+    return ++a;
+  };
+  return inner;
+};
+var outer2 = outer();
+console.log(outer2());
+console.log(outer2());
+```
+
+var outer2 = outer();에 의해 outer가 콜스택에 들어가고 outer가 inner의 실행 결과가 아닌 함수 자체를 리턴하여 outer2는 inner함수를 참조한다.
+
+이후 outer의 LE는제거될 것이라 생각한다. console.log(outer2());실행시 리턴된 그 inner함수를 실행한다. inner 내부에 a가 없으므로 스코프 체인을 따라 
+
+outer의 a=1을 가져와 1을 더한다. 출력은 2이고 outer의 a는 2를 가리킨다. 이후 inner의 LE는 제거된다. 다시 console.log(outer2());실행시 inner함수를 
+
+실행하고 inner 내부에 a가 없으므로 스코프 체인을 따라 outer의 a=2에서 1을 더하여 3을 출력하고 inner의 LE는 제거된다. 
+
+여기서 중요한 것은 outer의 a가 계속 살아있다는 것이다. 이것은 가비지 컬렉터의 특성으로 var outer2 = outer();로 인해 전역 LE의 내부환경이 inner를 
+
+가리키고 있으므로 inner에 사용되는 outer의 내부환경에 있는 a가 계속 살아있기 때문에 가능한 것이다. 이런 현상을 클로져라고 한다.
 
