@@ -889,3 +889,61 @@ var car = {
 남은 연료가 없으면 이동불가를 출력, 이후 남은 연료와 이동거리를 업데이트한다. 
 
 위 코드로 car 객체를 만든후 c.fuel=1000처럼 외부에서 마음대로 바꿀수 있다. 이것을 막기위해 클로저를 활용하여 권한을 제한할수있다. 
+
+
+## 5-11
+
+권한을 제한하기위해 객체를 바로 할당하지 않고 함수에서 객체를 생성해서 return하게했다. 
+
+```
+var createCar = function() {
+  var fuel = Math.ceil(Math.random() * 10 + 10); 
+  var power = Math.ceil(Math.random() * 3 + 2);
+  var moved = 0; 
+  return {
+    get moved() {
+      return moved;
+    },
+    run: function() {
+      var km = Math.ceil(Math.random() * 6);
+      var wasteFuel = km / power;
+      if (fuel < wasteFuel) {
+        console.log('이동불가');
+        return;
+      }
+      fuel -= wasteFuel;
+      moved += km;
+      console.log(km + 'km 이동 (총 ' + moved + 'km). 남은 연료: ' + fuel);
+    },
+  };
+};
+var car = createCar();
+```
+
+함수실행시 get moved()와 run을 프로퍼티로 가지는 객체를 return한다. return 되지 않은 fuel power는 외부에서 접근이 불가능 하다.
+
+따라서 외부에서는 moved를 읽거나 run을 실행하는것 말고는 할수있는게 없다.
+
+```
+car.run();
+console.log(car.moved);
+console.log(car.fuel);
+console.log(car.power);
+```
+
+따라서 위 코드 수행시 return된 객체에는 fuel와 power가 없으므로 car.fuel, car.power에 대해 undefined를 출력한다.
+
+```
+car.fuel=1000;
+console.log(car.fuel);
+car.run();
+
+car.power=100;
+console.log(car.power);
+car.run();
+
+car.moved=1000;
+console.log(car.moved);
+car.run();
+```
+때문에 위와같이 fuel, power, moved를 임의로 지정하려해도 불가능하다. 
