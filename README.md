@@ -777,7 +777,7 @@ addEventListener로 클릭시 원하는 메시지를 출력하도록한다. : �
 
 ## 5-7
 
-그런데 5-6의 경우 addEventListener의 콜백 함수가 너무 자주 반복된다는 문자가 있다 따라서 반복되는 콜백 함수를 따로 빼서 변수에 담는다.
+그런데 5-6의 경우 addEventListener의 콜백 함수가 너무 자주 반복된다는 문제가 있다 따라서 반복되는 콜백 함수를 따로 빼서 변수에 담는다.
 
 ```
 var fruits = ['apple', 'banana', 'peach'];
@@ -826,3 +826,34 @@ document.body.appendChild($ul);
 bind로 미리 null, fruit를 넘겨주어 정상적으로 클릭한 대상에 대한 메시지를 출력하게 하였다.
 
 하지만 이렇게되면 함수의 this가 달라지게 된다. 이를 위하여 bind가 아닌 함수를 리턴하는 방식으로 코드를 짜야한다. 
+
+
+
+## 5-9 
+
+5-8의 this가 바뀌는 문제를 해결하기 위해 함수를 리턴하도록 alertFruitBuilder를 만들었다.
+
+```
+var fruits = ['apple', 'banana', 'peach'];
+var $ul = document.createElement('ul');
+
+var alertFruitBuilder = function(fruit) {
+  return function() {
+    alert('your choice is ' + fruit);
+  };
+};
+fruits.forEach(function(fruit) {
+  var $li = document.createElement('li');
+  $li.innerText = fruit;
+  $li.addEventListener('click', alertFruitBuilder(fruit));
+  $ul.appendChild($li);
+});
+document.body.appendChild($ul);
+```
+
+$li.addEventListener('click', alertFruitBuilder(fruit));에서 alertFruitBuilder(fruit)의 결과로 이전의 5-8의 alertFruit
+
+함수가 리턴되어 콜백함수로 전달된다. 이벤트 발생시 alertFruitBuilder 의 인자인 fruit를 클로저로써 참조하게되어 정상적으로 메시지가 출력됨과 동시에
+
+this가 유지되게된다.
+
