@@ -87,3 +87,32 @@ console.log(newArr2);
 index에 5를 더하고 return하는 것이다. 따라서 결과는 [0, 1, 2] -> [5, 6, 7]
 
 
+
+
+
+## 4-5
+
+map 메서드를 임의로 구현해서 어떻게 callback 함수가 동작하고 그 함수의 this가 어떻게 정의되는지 알아본다.
+
+```
+Array.prototype.map = function(callback, thisArg) {
+    var mappedArr = [];
+    for (var i = 0; i < this.length; i++) {
+      var mappedValue = callback.call(thisArg || window, this[i], i, this);
+      mappedArr[i] = mappedValue;
+    }
+    return mappedArr;
+};
+```
+
+map은 첫번째로 callback 함수를 받고 두번째로 지정하고 싶은 this를 받는다. 코드 동작을 보자.
+
+먼저 mappedArr라는 새로운 배열을 만들고 그 배열에 크기만큼 동작을 반복하는데 그 동작이란
+
+call 메서드를 이용하여 thisArg가 있으면 그것을 callback의 this로 할당하고 없으면 window로 할당한다. 그리고
+
+그 뒤의 인자들을 callback의 인자로 넘겨서 함수를 실행한 결과를 mappedArr의 value로 넘긴다. 
+
+map완료시 그 mappedArr 배열을 넘긴다. 
+
+이런식으로 map이 동작하고 this를 내가 원하는 것으로 바꿀수 있는것이다.
