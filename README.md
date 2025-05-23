@@ -39,3 +39,30 @@ setInterval WebAPI의 callback으로 cbFunc함수를 인자로 넘겼는데 이 
 또한 인자로 300ms를 넘겼으므로 0에서 4까지 300ms 간격으로 출력하고 clearInterval로 인해 멈추게 된다.
 
 즉 callbackfunction의 제어권이 사용자가 아니라 setInterval에 있다는 것을 보인것이다. 
+
+
+
+## 4-3 
+
+이전 챕터에서 다뤘던 map을 콜백함수에 대한 지식을 바탕으로 다시 본다.
+
+```
+var newArr = [10, 20, 30].map(function(currentValue, index) {
+    console.log(currentValue, index);
+    return currentValue + 5;
+});
+console.log(newArr);
+```
+
+콜백함수는 사용자가 마음대로 짜는게 아니라 넘겨받는 함수가 설정한 형식에 맞추어서 넘겨야한다.
+
+map은 첫번째 인자로 callback함수를 받고 그 함수의 인자로 첫번째 : 현재 value, 두번째 : index, 세번째 : 배열자체가 담긴다.
+
+또한 map은 생략가능한 두번째 인자로 this로 인식할 대상을 넣는다. 
+
+그리고 각 배열요소에 대해서 callback 함수를 반복한다.
+
+앞의 지식을 바탕으로 코드를 보면 배열 요소 개수만큼 반복하는데 반복마다 현재 값과 그 index를 출력하며 현제 value에 5를 더해서 리턴한다.
+
+따라서 배열은 [15, 25, 35]가 된다.
+
