@@ -1067,3 +1067,65 @@ console.log(dog.greet('입니다!'));
 ```
 
 partial을 사용하여 prefix인 왈왈을 이미 넣어놨으므로 dog.greet('입니다!')실행시 입니다는 suffix로 들어가서 출력은 왈왈, 강아지입니다!가 된다.
+
+
+
+
+## 5-15
+
+인자들을 원하는 위치에 미리 넣고 나중에 빈자리에 인자를 넣을수있는 함수이다. 
+
+````
+Object.defineProperty(window, '_', {
+  value: 'EMPTY_SPACE',
+  writable: false,
+  configurable: false,
+  enumerable: false,
+});
+
+var partial2 = function() {
+  var originalPartialArgs = arguments;
+  var func = originalPartialArgs[0];
+  if (typeof func !== 'function') {
+    throw new Error('첫 번째 인자가 함수가 아닙니다.');
+  }
+  return function() {
+    var partialArgs = Array.prototype.slice.call(originalPartialArgs, 1);
+    var restArgs = Array.prototype.slice.call(arguments);
+    for (var i = 0; i < partialArgs.length; i++) {
+      if (partialArgs[i] === _) {
+        partialArgs[i] = restArgs.shift();
+      }
+    }
+    return func.apply(this, partialArgs.concat(restArgs));
+  };
+};
+```
+
+for 문으로 만약 미리 받은 인자들중 _이면 그 자리에 나중에 넘겨받은 argument를 shift를 사용하여 넣게 구현하였다.
+
+````
+var add = function() {
+  var result = 0;
+  for (var i = 0; i < arguments.length; i++) {
+    result += arguments[i];
+  }
+  return result;
+};
+var addPartial = partial2(add, 1, 2, _, 4, 5, _, _, 8, 9);
+console.log(addPartial(3, 6, 7, 10)); 
+```
+
+따라서 _부분에 3,6,7,10을 넣어 1~10까지 더해서 출력한다.
+
+```
+var dog = {
+  name: '강아지',
+  greet: partial2(function(prefix, suffix) {
+    return prefix + this.name + suffix;
+  }, '왈왈, '),
+};
+console.log(dog.greet(' 배고파요!')); 
+```
+
+위 코드는 5-14와 같은 해석으로 미리 prefix에 왈왈 할당 함수 실행시 배고파요 suffix에 할당 출력은 왈왈, 강아지 배고파요!
