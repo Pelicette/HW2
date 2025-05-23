@@ -172,3 +172,27 @@ obj.logValues(1, 2)의 경우 obj.logValues가 가리키는 function을 전달�
 callback함수의 this가 가리키는 것은 window가 된다. 
 
 따라서 메서드도 callback함수로 사용되면 this가 callback함수를 호출한 것이 지정해준것으로 결정된다. 
+
+
+
+## 4-8
+
+콜백함수의 this를 내가 원하는 값으로 바꾸는 방법이다. 
+
+```
+var obj1 = {
+    name: 'obj1',
+    func: function() {
+      var self = this;
+      return function() {
+        console.log(self.name);
+      };
+    },
+};
+var callback = obj1.func();
+setTimeout(callback, 1000);
+```
+
+함수에 self라는 변수를 만들어서 function()을 호출한 주체인 obj=this를 저장하여 이를 this로 사용하는 방법이다. 
+
+하지만 이것은 실제 this가 바뀌는 것은 아니고 번거롭다.
