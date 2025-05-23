@@ -196,3 +196,21 @@ setTimeout(callback, 1000);
 함수에 self라는 변수를 만들어서 function()을 호출한 주체인 obj=this를 저장하여 이를 this로 사용하는 방법이다. 
 
 하지만 이것은 실제 this가 바뀌는 것은 아니고 번거롭다.
+
+
+
+## 4-9
+
+이 예제는 그냥 this를 사용하지 않는 것이다. 
+
+```
+var obj1 = {
+    name: 'obj1',
+    func: function() {
+      console.log(obj1.name);
+    },
+};
+setTimeout(obj1.func, 1000);
+```
+
+하지만 이렇게하면 this를 이용한 기술들을 자유롭게 활용하지 못한다. 
