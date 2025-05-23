@@ -799,3 +799,30 @@ alertFruit(fruits[1]);
 alertFruit(fruits[1]); 수행시 정상적으로 banana가 나오지만 li클릭시 5-6처럼 무엇을 눌렀다고 메시지가 정상적으로 나오지 않는다.
 
 addEventListener는 콜백함수를 호출할때 첫번째 인자에 이벤트 객체를 넣기 때문이다. 
+
+
+
+
+## 5-8
+
+5-7과 같은 문제를 bind를 사용하여 해결할수있다. 
+
+```
+var fruits = ['apple', 'banana', 'peach'];
+var $ul = document.createElement('ul');
+
+var alertFruit = function(fruit) {
+  alert('your choice is ' + fruit);
+};
+fruits.forEach(function(fruit) {
+  var $li = document.createElement('li');
+  $li.innerText = fruit;
+  $li.addEventListener('click', alertFruit.bind(null, fruit));
+  $ul.appendChild($li);
+});
+document.body.appendChild($ul);
+```
+
+bind로 미리 null, fruit를 넘겨주어 정상적으로 클릭한 대상에 대한 메시지를 출력하게 하였다.
+
+하지만 이렇게되면 함수의 this가 달라지게 된다. 이를 위하여 bind가 아닌 함수를 리턴하는 방식으로 코드를 짜야한다. 
