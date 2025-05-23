@@ -920,9 +920,9 @@ var createCar = function() {
 var car = createCar();
 ```
 
-함수실행시 get moved()와 run을 프로퍼티로 가지는 객체를 return한다. return 되지 않은 fuel power는 외부에서 접근이 불가능 하다.
+함수실행시 get moved()와 run함수를 프로퍼티로 가지는 객체를 return한다. return 되지 않은 fuel power는 객체 내부에 없기때문에 외부에서 접근이 불가능 하다.
 
-따라서 외부에서는 moved를 읽거나 run을 실행하는것 말고는 할수있는게 없다.
+따라서 외부에서는 moved를 읽거나 run을 실행하는것 말고는 할수있는게 없다
 
 ```
 car.run();
@@ -931,7 +931,7 @@ console.log(car.fuel);
 console.log(car.power);
 ```
 
-따라서 위 코드 수행시 return된 객체에는 fuel와 power가 없으므로 car.fuel, car.power에 대해 undefined를 출력한다.
+위 코드 수행시 return된 객체에는 fuel와 power가 없으므로 car.fuel, car.power에 대해 undefined를 출력한다.
 
 ```
 car.fuel=1000;
@@ -947,3 +947,38 @@ console.log(car.moved);
 car.run();
 ```
 때문에 위와같이 fuel, power, moved를 임의로 지정하려해도 불가능하다. 
+
+
+
+## 5-12
+
+5-11로 권한을 제한하여도 run메서드 자체를 바꾼다면 아직 어뷰징이 가능하다 때문에 객체를 return하기 전에 변경할수 없도록 조치해야한다.
+
+```
+var createCar = function() {
+  var fuel = Math.ceil(Math.random() * 10 + 10); 
+  var power = Math.ceil(Math.random() * 3 + 2);
+  var moved = 0; 
+  var publicMembers = {
+    get moved() {
+      return moved;
+    },
+    run: function() {
+      var km = Math.ceil(Math.random() * 6);
+      var wasteFuel = km / power;
+      if (fuel < wasteFuel) {
+        console.log('이동불가');
+        return;
+      }
+      fuel -= wasteFuel;
+      moved += km;
+      console.log(km + 'km 이동 (총 ' + moved + 'km). 남은 연료: ' + fuel);
+    },
+  };
+  Object.freeze(publicMembers);
+  return publicMembers;
+};
+var car = createCar();
+```
+
+위 코드에서는 var publicMembers안에 moved()와 run을 넣고 Object.freeze(publicMembers)로 객체가 변경되는것을 막았다.
