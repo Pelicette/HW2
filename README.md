@@ -439,3 +439,36 @@ promise를 활용하여 4-13의 동작을 표현할수 있다. promise는 안에
 이때 prevName에 resolve한 커피 이름 name을 넘겨주어 이전에 resolve한 이름에 현재 커피 이름을 더해준다.
 
 이것을 반복하여 동작한다. 즉 앞에걸 실행하고 끝나면 then안에 내용 실행하므로 가독성이 좋다.
+
+
+
+## 4-15
+
+4-14의 중복되는 코드를 없애고 더 compact하고 가독성 좋게 만들수 있다. 
+
+```
+var addCoffee = function(name) {
+    return function(prevName) {
+      return new Promise(function(resolve) {
+        setTimeout(function() {
+          var newName = prevName ? prevName + ', ' + name : name;
+          console.log(newName);
+          resolve(newName);
+        }, 500);
+      });
+    };
+};
+```
+
+newName = prevName ? prevName + ', ' + name : name;로 prename이 있으면 기존 prename에 name을 더해서 이름을 만들고
+
+이전 이름이 없으면 현재 이름만드로 새 이름을 만든다. 이것을 500ms마다 반복하는데 
+
+```
+addCoffee('에스프레소')()
+    .then(addCoffee('아메리카노'))
+    .then(addCoffee('카페모카'))
+    .then(addCoffee('카페라떼'));
+```
+
+들어가는 이름은 이렇게 순서대로 보기쉽게 정리할수있다. 
