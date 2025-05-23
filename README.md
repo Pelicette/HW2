@@ -655,7 +655,27 @@ outer의 a=1을 가져와 1을 더한다. 출력은 2이고 outer의 a는 2를 �
 
 위의 예제는 window 메서드setInterval에 function의 내부함수인 inner를 넘겼으므로 변수 a가 사라지지 않고 계속 남아있어
 
-1에서 10까지 1초마다 출력한다.
+1에서 10까지 1초마다 출력한다. ==클로저
+
+
+
+## 5-4-2
+
+외부로의 전달은 return말고도 여러 방식이 있음을 보여주는 예제이다. 
+
+```
+(function() {
+  var count = 0;
+  var button = document.createElement('button');
+  button.innerText = 'click';
+  button.addEventListener('click', function() {
+    console.log(++count, 'times clicked');
+  });
+  document.body.appendChild(button);
+})();
+```
+
+위 코드는 addEventListener에 callback함수 내부에서 지역변수 참조로 클로저라고 할수있다. 
 
 
 
