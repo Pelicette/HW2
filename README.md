@@ -472,3 +472,40 @@ addCoffee('에스프레소')()
 ```
 
 들어가는 이름은 이렇게 순서대로 보기쉽게 정리할수있다. 
+
+
+
+## 4-16
+
+앞의 동작을 generator를 사용하여 비동기 처리를 할수있다. 
+
+```
+var addCoffee = function(prevName, name) {
+    setTimeout(function() {
+      coffeeMaker.next(prevName ? prevName + ', ' + name : name);
+    }, 500);
+};
+```
+
+이 함수는 앞과 같이 prename에 name을 더해주는데 그것을 setTimeout의 callback함수에서 이루어지게 한것이다. 
+
+```
+var coffeeGenerator = function*() {
+    var espresso = yield addCoffee('', '에스프레소');
+    console.log(espresso);
+    var americano = yield addCoffee(espresso, '아메리카노');
+    console.log(americano);
+    var mocha = yield addCoffee(americano, '카페모카');
+    console.log(mocha);
+    var latte = yield addCoffee(mocha, '카페라떼');
+    console.log(latte);
+};
+var coffeeMaker = coffeeGenerator();
+coffeeMaker.next();
+```
+
+generator를 실행하면 iterator가 반환되고 이것은 generator안의 yield가 나오면 멈추었다가 next가 실행되면 이전에 멈추었던 지점부터 코드를 진행한다.
+
+따라서 generator안의 코드는 위에서부터 순차적으로 앞에것이 먼저 실행된 다음에야 실행되서 비동기 작업의 동기적 표현이 가능한 것이다. 
+
+출력은 이전의 코드들과 같다. 
