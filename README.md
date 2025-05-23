@@ -509,3 +509,44 @@ generator를 실행하면 iterator가 반환되고 이것은 generator안의 yie
 따라서 generator안의 코드는 위에서부터 순차적으로 앞에것이 먼저 실행된 다음에야 실행되서 비동기 작업의 동기적 표현이 가능한 것이다. 
 
 출력은 이전의 코드들과 같다. 
+
+
+
+
+## 4-17
+
+async와 await를 활용해서도 비동기 작업을 수행할수있다. 
+
+```
+var addCoffee = function(name) {
+    return new Promise(function(resolve) {
+      setTimeout(function() {
+        resolve(name);
+      }, 500);
+    });
+};
+```
+
+먼저 비동기 작업을 수행할 함수에 async를 사용하고 비동기 작업이 수행될 함수 앞에다가 await를 쓴다면 앞의 await함수가 실행되어야 뒤의 함수가 실행된다.
+
+```
+var coffeeMaker = async function() {
+    var coffeeList = '';
+    var _addCoffee = async function(name) {
+      coffeeList += (coffeeList ? ',' : '') + (await addCoffee(name));
+    };
+    await _addCoffee('에스프레소');
+    console.log(coffeeList);
+    await _addCoffee('아메리카노');
+    console.log(coffeeList);
+    await _addCoffee('카페모카');
+    console.log(coffeeList);
+    await _addCoffee('카페라떼');
+    console.log(coffeeList);
+};
+coffeeMaker();
+```
+
+위와 같이 사용시 addCoffee동작을 순차적으로 수행하기위한 coffeeMaker함수에 async를 쓰고 순차적으로 실행될 addCoffee에 await를 사용한다면 
+
+4-16의 yield처럼 위에서부터 순서대로 addCoffe가 실행된다. 
