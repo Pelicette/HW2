@@ -745,3 +745,31 @@ outer = null;
   document.body.appendChild(button);
 })();
 ```
+
+
+## 5-6
+
+콜백 함수에서 외부 변수를 참조하여 클로저를 만드는 경우에 대한 예제이다. 
+
+```
+var fruits = ['apple', 'banana', 'peach'];
+var $ul = document.createElement('ul');
+
+fruits.forEach(function(fruit) {
+ 
+  var $li = document.createElement('li');
+  $li.innerText = fruit;
+  $li.addEventListener('click', function() {
+ 
+    alert('your choice is ' + fruit);
+  });
+  $ul.appendChild($li);
+});
+document.body.appendChild($ul);
+```
+
+forEach로 fruit배열을 순회하여 li를 생성한다 : forEach의 콜백함수는 외부 변수를 참조하지 않아 클로저가 없다.
+
+addEventListener로 클릭시 원하는 메시지를 출력하도록한다. : 이때의 콜백함수는 fruit라는 외부 변수를 참조하므로 클로저가 존재한다.
+
+이 클로저로 인해 선택한 것이 어떤 과일인지 계속 출력할수있다. 
