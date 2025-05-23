@@ -277,3 +277,28 @@ return 후에 setTimeout으로 실행하여 obj3출력
 
 
 이렇게 간접적으로 원하는 함수를 바라보는 callback함수를 만들수있다. 
+
+
+
+## 4-11
+
+4-8과 같이 전통적인 방법을 쓰지 않아도 bind를 사용하면 this를 내가 원하는것을 바라보게 하기 쉽다.
+
+```
+var obj1 = {
+    name: 'obj1',
+    func: function() {
+      console.log(this.name);
+    },
+};
+setTimeout(obj1.func.bind(obj1), 1000);
+```
+
+bind로 미리 func의 this를 obj1으로 해놓고 실행시 obj1.name을 출력한다.
+
+```
+var obj2 = { name: 'obj2' };
+setTimeout(obj1.func.bind(obj2), 1500);
+```
+
+미리 func의 this를 obj2로 해놓고 실행시 obj2.name을 출력한다.
