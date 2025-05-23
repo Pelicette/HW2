@@ -1006,3 +1006,64 @@ console.log(addPartial(6, 7, 8, 9, 10));
 인자로 받는 값을 모두 더해서 리턴하는 add함수가있다. var addPartial = add.bind(null, 1, 2, 3, 4, 5)로 this는 null을 가리키게 하고
 
 미리 인자로 1, 2, 3, 4, 5를 넘긴다. 이후addPartial(6, 7, 8, 9, 10)로 나머지 인자를 넘기면 함수가 실행되어 1~10을 더한 55가 출력된다.
+
+
+
+## 5-14
+
+bind의 경우 this의 값을 변경하기 때문에 메서드에서 사용하기에는 제한된다. 그것을 해결하기위해 this를 바꾸지않는 함수를 구현한다. 
+
+```
+var partial = function() {
+  var originalPartialArgs = arguments;
+  var func = originalPartialArgs[0];
+  if (typeof func !== 'function') {
+    throw new Error('첫 번째 인자가 함수가 아닙니다.');
+  }
+  return function() {
+    var partialArgs = Array.prototype.slice.call(originalPartialArgs, 1);
+    var restArgs = Array.prototype.slice.call(arguments);
+    return func.apply(this, partialArgs.concat(restArgs));
+  };
+};
+```
+
+partial함수는 첫번째 인자로 원본 함수를 받고 이후에는 인자를 받는다. var originalPartialArgs = arguments;로 최초 부분 적용함수로 미리 받는 인자들을 받는다
+
+var func = originalPartialArgs[0]로 원본 함수를 받고 
+
+if (typeof func !== 'function')로 함수인지 아진지 판단하여 에러 메시지를 출력한다. 함수가 맞으면 
+
+어떤 함수를 return하는데 최초 부분 적용함수로 미리 받는 인자들중 함수를 제외한 인자들을 partialArgs에 넣고 이후에 실행시 받은 arguments와 합하여 
+
+원본함수의 인자로 넣어 실행하는 함수이다. 그때 apply의 첫번째 인자로 this를 사용하여 실행 시점의 this를 그대로 사용하게하여 this를 유지한다. 
+
+더 자세히 말하면 처음 partial 실행시 originalPartialArgs, func가 세팅되고 function()을 return 시킨후 그 return된 함수 실행시 클로저를 이용하여
+
+세팅된 originalPartialArgs, func과 현재받은 인수인 arguments를 이용하여 함수를 실행하는 것이다.
+
+```
+var add = function() {
+  var result = 0;
+  for (var i = 0; i < arguments.length; i++) {
+    result += arguments[i];
+  }
+  return result;
+};
+var addPartial = partial(add, 1, 2, 3, 4, 5);
+console.log(addPartial(6, 7, 8, 9, 10));
+```
+
+위의 설명과 가팅 미리 1~5 인자를 받는데 나중에 실행할 함수는 add이고 addPartial(6, 7, 8, 9, 10)시 add가 실행되어 1~10까지 더한다.
+
+```
+var dog = {
+  name: '강아지',
+  greet: partial(function(prefix, suffix) {
+    return prefix + this.name + suffix;
+  }, '왈왈, '),
+};
+console.log(dog.greet('입니다!')); 
+```
+
+partial을 사용하여 prefix인 왈왈을 이미 넣어놨으므로 dog.greet('입니다!')실행시 입니다는 suffix로 들어가서 출력은 왈왈, 강아지입니다!가 된다.
