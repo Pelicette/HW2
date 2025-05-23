@@ -386,3 +386,56 @@ setTimeout(addEspresso, 500, '에스프레소');
 콜백함수를 기명함수로서 미리 선언해 놓고 사용하는 방법이다. 그리고 콜백함수안에 콜백함수를 넣는 방법은 콜백에 사용할 기명함수 안에서 setTimeout의 콜백으로
 
 또다른 기명함수를 쓰는 것이다. 이렇게 하면 위에서 아래로 읽어 어느 콜백 실행후 다음 어떤게 실행될지 가독성이 좋아진다. 
+
+
+
+## 4-14
+
+4-13처럼 한다면 단순히 callback함수로 사용될것을 일일히 변수에 저장하는것은 상대적으로 4-12에 비해 쉽긴하나 일일히 함수명을 찾아서 따라가야 하므로 
+
+아직 가독성이 좋지는 않다. 
+
+```
+new Promise(function(resolve) {
+    setTimeout(function() {
+      var name = '에스프레소';
+      console.log(name);
+      resolve(name);
+    }, 500);
+  })
+    .then(function(prevName) {
+      return new Promise(function(resolve) {
+        setTimeout(function() {
+          var name = prevName + ', 아메리카노';
+          console.log(name);
+          resolve(name);
+        }, 500);
+      });
+    })
+    .then(function(prevName) {
+      return new Promise(function(resolve) {
+        setTimeout(function() {
+          var name = prevName + ', 카페모카';
+          console.log(name);
+          resolve(name);
+        }, 500);
+      });
+    })
+    .then(function(prevName) {
+      return new Promise(function(resolve) {
+        setTimeout(function() {
+          var name = prevName + ', 카페라떼';
+          console.log(name);
+          resolve(name);
+        }, 500);
+      });
+});
+```
+
+promise를 활용하여 4-13의 동작을 표현할수 있다. promise는 안에서 resolve 또는 reject함수가 있다면 이중 하나가 실행되어야 then으로 넘어간다.
+
+먼저 제일 위의 setTimeout이 실행되면 에스프레소가 500ms이후 출력되고 resolve해놨다가 동작이 끝났으므로 뒤의 then에의해 다음 setTimeout이 실행되는데 
+
+이때 prevName에 resolve한 커피 이름 name을 넘겨주어 이전에 resolve한 이름에 현재 커피 이름을 더해준다.
+
+이것을 반복하여 동작한다. 즉 앞에걸 실행하고 끝나면 then안에 내용 실행하므로 가독성이 좋다.
