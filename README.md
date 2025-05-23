@@ -550,3 +550,26 @@ coffeeMaker();
 위와 같이 사용시 addCoffee동작을 순차적으로 수행하기위한 coffeeMaker함수에 async를 쓰고 순차적으로 실행될 addCoffee에 await를 사용한다면 
 
 4-16의 yield처럼 위에서부터 순서대로 addCoffe가 실행된다. 
+
+
+
+## 5-1
+
+클로저가 무엇인지 알기위해 콜스텍에서 실행 컨택스트가 어떻게 동작하는지 보자 
+
+```
+var outer = function() {
+  var a = 1;
+  var inner = function() {
+    console.log(++a);
+  };
+  inner();
+};
+outer();
+```
+
+콜스텍에서 outer가 들어가고 내부 환경은 a와 inner가 있다. 
+
+inner 실행시 inner의 외부 환경은 outer를 가리키고 내부 환경은 없다 이때 ++a를 해야하는데 내부 환경에는 없으므로 스코프 체인을 따라 outer의 a를
+
+찾아서 1을 더해준후 출력한다. 이후 콜스택에서 inner가 pop, outer가 pop되어 a, inner에 대한 참조가 지워지면 가비지 컬렉터가 a, inner를 수집한다. 
