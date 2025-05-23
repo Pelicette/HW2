@@ -350,3 +350,39 @@ setTimeout(
 위의 코드같은 경우에는 setTimeout안에 계속 setTimeout이 있어 가독성이 떨어진다 첫번째 실행되는 setTimeout이 에스프레소임에도 코드 가장 밑에있어
 
 동작을 알아보기 힘들다.
+
+
+
+## 4-13
+
+4-12와 같은 콜백지옥을 해결하기위해 기명함수를 쓰는 방법이있다.
+
+```
+var coffeeList = '';
+
+var addEspresso = function(name) {
+  coffeeList = name;
+  console.log(coffeeList);
+  setTimeout(addAmericano, 500, '아메리카노');
+};
+var addAmericano = function(name) {
+  coffeeList += ', ' + name;
+  console.log(coffeeList);
+  setTimeout(addMocha, 500, '카페모카');
+};
+var addMocha = function(name) {
+  coffeeList += ', ' + name;
+  console.log(coffeeList);
+  setTimeout(addLatte, 500, '카페라떼');
+};
+var addLatte = function(name) {
+  coffeeList += ', ' + name;
+  console.log(coffeeList);
+};
+
+setTimeout(addEspresso, 500, '에스프레소');
+```
+
+콜백함수를 기명함수로서 미리 선언해 놓고 사용하는 방법이다. 그리고 콜백함수안에 콜백함수를 넣는 방법은 콜백에 사용할 기명함수 안에서 setTimeout의 콜백으로
+
+또다른 기명함수를 쓰는 것이다. 이렇게 하면 위에서 아래로 읽어 어느 콜백 실행후 다음 어떤게 실행될지 가독성이 좋아진다. 
