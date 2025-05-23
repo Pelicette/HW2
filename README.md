@@ -982,3 +982,27 @@ var car = createCar();
 ```
 
 위 코드에서는 var publicMembers안에 moved()와 run을 넣고 Object.freeze(publicMembers)로 객체가 변경되는것을 막았다.
+
+
+
+## 5-13 
+
+부분적용함수에 대한 예제이다. 부분적용함수랑 미리 일부의 인자를 넘기고 나중에 나머지의 인자를 넘긴 이후부터 실행 결과를 얻을수있는 함수이다. 
+
+이것을 할수있게 해주는 것에는 bind가 있다. 
+
+```
+var add = function() {
+  var result = 0;
+  for (var i = 0; i < arguments.length; i++) {
+    result += arguments[i];
+  }
+  return result;
+};
+var addPartial = add.bind(null, 1, 2, 3, 4, 5);
+console.log(addPartial(6, 7, 8, 9, 10));
+```
+
+인자로 받는 값을 모두 더해서 리턴하는 add함수가있다. var addPartial = add.bind(null, 1, 2, 3, 4, 5)로 this는 null을 가리키게 하고
+
+미리 인자로 1, 2, 3, 4, 5를 넘긴다. 이후addPartial(6, 7, 8, 9, 10)로 나머지 인자를 넘기면 함수가 실행되어 1~10을 더한 55가 출력된다.
