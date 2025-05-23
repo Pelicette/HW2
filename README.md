@@ -149,3 +149,26 @@ document.body.querySelector('#a').addEventListener(
 ```
 
 addEventListener는 메서드의 this를 callback의 함수의 this로 지정하기 때문에 addEventListener를 호출한 HTML 엘리먼트를 가리킨다.
+
+
+
+## 4-7
+
+callback함수로 메서드를 넘기면 this는 어떻게 되는지에 대한 예제이다. 
+
+```
+var obj = {
+    vals: [1, 2, 3],
+    logValues: function(v, i) {
+      console.log(this, v, i);
+    },
+};
+obj.logValues(1, 2);
+[4, 5, 6].forEach(obj.logValues);
+```
+
+obj.logValues(1, 2)의 경우 obj.logValues가 가리키는 function을 전달하고 그것의 this는 forEach가 window로 지정하여
+
+callback함수의 this가 가리키는 것은 window가 된다. 
+
+따라서 메서드도 callback함수로 사용되면 this가 callback함수를 호출한 것이 지정해준것으로 결정된다. 
