@@ -573,3 +573,26 @@ outer();
 inner 실행시 inner의 외부 환경은 outer를 가리키고 내부 환경은 없다 이때 ++a를 해야하는데 내부 환경에는 없으므로 스코프 체인을 따라 outer의 a를
 
 찾아서 1을 더해준후 출력한다. 이후 콜스택에서 inner가 pop, outer가 pop되어 a, inner에 대한 참조가 지워지면 가비지 컬렉터가 a, inner를 수집한다. 
+
+
+
+
+## 5-2
+
+5-1의 call스택 동작과 비슷한 동작의 예제이다. 
+
+```
+var outer = function() {
+  var a = 1;
+  var inner = function() {
+    return ++a;
+  };
+  return inner();
+};
+var outer2 = outer();
+console.log(outer2);
+```
+var outer2 = outer()수행시 5-1처럼 inner의 내부환경에 a가 없기 때문에 스코프 체인을 따라 outer의 a=1을 찾아 1을 더해준 2를 반환한다.
+
+이후 inner가 pop한 이후 outer가 pop한다. 5-1과 5-2모두 outer보다 inner가 콜스택에서 pop되어서 이후 별도로 inner를 호출할수 없다. 
+
