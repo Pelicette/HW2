@@ -1223,3 +1223,37 @@ var getMinWith10 = curry3(Math.min)(10);
 console.log(getMinWith10(8)); 
 console.log(getMinWith10(25)); 
 ```
+
+
+
+## 5-18
+
+5-17과 같이 함수르 구성하면 인자개수만큼 함수를 만들어야 하기 때문에 깊이가 깊어지고 가독성이 떨어진다.
+
+```
+var curry5 = function(func) {
+  return function(a) {
+    return function(b) {
+      return function(c) {
+        return function(d) {
+          return function(e) {
+            return func(a, b, c, d, e);
+          };
+        };
+      };
+    };
+  };
+};
+var getMax = curry5(Math.max);
+console.log(getMax(1)(2)(3)(4)(5));
+```
+
+위와 같이 가독성이 떨어지는 코드가 된다.
+
+따라서 이를 해결하기위해
+
+```
+var curry5=func=>a=>b=>c=>d=>e=>func(a,b,c,d,e);
+```
+
+와 같이 화살표 함수를 사용하여 한번에표기할수있다. 
