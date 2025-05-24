@@ -865,6 +865,7 @@ this가 유지되게된다.
 
 이제부터 아래의 게임 코드를 이용하여 접근권한을 제어해보는 예제들을 진행하겠다. 
 
+```
 var car = {
   fuel: Math.ceil(Math.random() * 10 + 10),
   power: Math.ceil(Math.random() * 3 + 2), 
@@ -881,6 +882,7 @@ var car = {
     console.log(km + 'km 이동 (총 ' + this.moved + 'km)');
   },
 };
+```
 
 위의 코드를 설명하면
 
