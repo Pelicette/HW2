@@ -1075,7 +1075,7 @@ partial을 사용하여 prefix인 왈왈을 이미 넣어놨으므로 dog.greet(
 
 인자들을 원하는 위치에 미리 넣고 나중에 빈자리에 인자를 넣을수있는 함수이다. 
 
-````
+```
 Object.defineProperty(window, '_', {
   value: 'EMPTY_SPACE',
   writable: false,
@@ -1104,7 +1104,7 @@ var partial2 = function() {
 
 for 문으로 만약 미리 받은 인자들중 _이면 그 자리에 나중에 넘겨받은 argument를 shift를 사용하여 넣게 구현하였다.
 
-````
+```
 var add = function() {
   var result = 0;
   for (var i = 0; i < arguments.length; i++) {
@@ -1129,3 +1129,41 @@ console.log(dog.greet(' 배고파요!'));
 ```
 
 위 코드는 5-14와 같은 해석으로 미리 prefix에 왈왈 할당 함수 실행시 배고파요 suffix에 할당 출력은 왈왈, 강아지 배고파요!
+
+## 5-16
+
+부분함수 사용예시로 디바운스가 있다. 디바운스는 처음 또는 마지막에 발생한 이벤트에 대해 한번만 처리하는 것이다.
+
+```
+var debounce = function(eventName, func, wait) {
+  var timeoutId = null;
+  return function(event) {
+    var self = this;
+    console.log(eventName, 'event 발생');
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(func.bind(self, event), wait);
+  };
+};
+```
+
+디바운스 함수는 인수로 함수와 마지막으로 발새한 이벤트를 판단하기 위한 시간을 받는다. 처음으로 이벤트 발생시 
+
+timeoutId = setTimeout(func.bind(self, event), wait)으로 인해 wait시간이후에 함수를 실행할것이다. 이때 wait 시간 이전에 이벤트가 발생시
+
+clearTimeout(timeoutId)로 초기화 하고 다시 setTimeout(func.bind(self, event), wait)으로 wait 시간 이후에 함수를 실행하도록한다.
+
+만약 wait시간 이내에 동일한 이벤트게 계속 발생시 마지막 이벤트만이 wait시간 이후에 실행될것이다. 
+
+```
+var moveHandler = function(e) {
+  console.log('move event 처리');
+};
+var wheelHandler = function(e) {
+  console.log('wheel event 처리');
+};
+document.body.addEventListener('mousemove', debounce('move', moveHandler, 500));
+document.body.addEventListener(
+  'mousewheel',
+  debounce('wheel', wheelHandler, 700)
+);
+```
