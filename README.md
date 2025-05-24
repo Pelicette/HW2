@@ -1167,3 +1167,59 @@ document.body.addEventListener(
   debounce('wheel', wheelHandler, 700)
 );
 ```
+
+
+
+## 5-17
+
+커링 함수에 대한 예제이다. 커링함수는 여래개의 인자를 받는 함수를 한개의 인자만을 받는 함수로 나누어서 순차저긍로 호출될 수 있게 구성한 것을 말한다.
+
+커링은 한 번에 하나의 인자만을 전달하고 마지막 인자를 전달받은 후에 함수가 실행된다. 
+
+```
+var curry3 = function(func) {
+  return function(a) {
+    return function(b) {
+      return func(a, b);
+    };
+  };
+};
+
+var getMaxWith10 = curry3(Math.max)(10);
+```
+
+var getMaxWith10 = curry3(Math.max)(10)에서 curry3 함수에서 Math.max함수를 넘겨 실행하여 
+
+
+```
+function(a) {
+    return function(b) {
+      return func(a, b);
+    };
+};
+```
+
+를 리턴받고 (10)에의해 이 함수에서 a에 10을 넣고 
+
+```
+function(b) {
+      return func(a, b);
+    };
+```
+
+을 리턴받는다. 
+
+```
+console.log(getMaxWith10(8)); 
+console.log(getMaxWith10(25)); 
+```
+
+따라서 getMaxWith10(8)수행시 위 함수에 클로저로 인해 이미 a=10으로 할당되었고 나머지 변수인 b에 8을 할당하여 func(a, b)=Math.max(10,8)=10을 수행
+
+나머지 코드들도 같은식으로 해석이 가능하다. 
+
+```
+var getMinWith10 = curry3(Math.min)(10);
+console.log(getMinWith10(8)); 
+console.log(getMinWith10(25)); 
+```
