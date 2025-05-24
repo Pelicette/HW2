@@ -1056,7 +1056,7 @@ var addPartial = partial(add, 1, 2, 3, 4, 5);
 console.log(addPartial(6, 7, 8, 9, 10));
 ```
 
-위의 설명과 가팅 미리 1~5 인자를 받는데 나중에 실행할 함수는 add이고 addPartial(6, 7, 8, 9, 10)시 add가 실행되어 1~10까지 더한다.
+위의 설명과 가팅 미리 1-5 인자를 받는데 나중에 실행할 함수는 add이고 addPartial(6, 7, 8, 9, 10)시 add가 실행되어 1-10까지 더한다.
 
 ```
 var dog = {
